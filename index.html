@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>reminisçence</title>
   <style>
     body {
       margin: 0;
-      padding:0;
+      padding: 0;
       background-color: black;
-      background-image: repeating-linear-gradient(-45deg,transparent 0px, transparent 20px,(rgba(255,0,0) 21px,rgba(255,0,0) 23px,transparent 24px, transparent 40px));
+      background-image: repeating-linear-gradient(-45deg, transparent 0px, transparent 20px, (rgba(255, 0, 0) 21px, rgba(255, 0, 0) 23px, transparent 24px, transparent 40px));
       background-size: cover;
       font-family: sans-serif;
       background: #111;
@@ -77,177 +78,216 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="player">
-  <img src="https://i.postimg.cc/fRDnSHd3/file-00000000df0c61f6aaf7426efa01a1f6.png" alt="Playlist Cover" id="cover" />
-  <div class="title" id="title">Title</div>
-  <div class="artist" id="artist">Artist</div>
+  <div class="player">
+    <img src="https://i.postimg.cc/fRDnSHd3/file-00000000df0c61f6aaf7426efa01a1f6.png" alt="Playlist Cover"
+      id="cover" />
+    <div class="title" id="title">Title</div>
+    <div class="artist" id="artist">Artist</div>
 
-  <div class="controls">
-    <button onclick="prevTrack()">⏮</button>
-    <button onclick="togglePlay()" id="playPauseBtn">▶</button>
-    <button onclick="nextTrack()">⏭</button>
+    <div class="controls">
+      <button onclick="prevTrack()">⏮</button>
+      <button onclick="togglePlay()" id="playPauseBtn">▶</button>
+      <button onclick="nextTrack()">⏭</button>
+    </div>
+
+    <div class="seekbar-container">
+      <input type="range" id="seekbar" min="0" value="0" step="0.1">
+      <span id="current-time">0:00</span>
+    </div>
+
+    <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volumeSlider"
+      onchange="setVolume(this.value)">
   </div>
 
-  <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider" id="volumeSlider" onchange="setVolume(this.value)">
-</div>
+  <audio id="audioPlayer"></audio>
 
-<audio id="audioPlayer"></audio>
+  <script>
+    const playlist = [
 
-<script>
-  const playlist = [
+      // reminisçence metal
 
-    // reminisçence metal
+      // Bring Me To Life
+      {
+        src: "https://files.catbox.moe/a1bp2p.mp3",
+        title: "Bring Me To Life - Evanescence"
+      },
 
-    // Bring Me To Life
-    {
-      src: "https://files.catbox.moe/a1bp2p.mp3",
-      title: "Bring Me To Life - Evanescence"
-    },
+      // In The End
+      {
+        src: "https://files.catbox.moe/f1f54m.mp3",
+        title: "In The End - Linkin Park"
+      },
 
-    // In The End
-    {
-      src: "https://files.catbox.moe/f1f54m.mp3",
-      title: "In The End - Linkin Park"
-    },
+      // A Little Piece of Heaven
+      {
+        src: "https://files.catbox.moe/gbtc7p.mp3",
+        title: "A Little Piece of Heaven - Avenged Sevenfold"
+      },
 
-    // A Little Piece of Heaven
-    {
-      src: "https://files.catbox.moe/gbtc7p.mp3",
-      title: "A Little Piece of Heaven - Avenged Sevenfold"
-    },
+      {
+        src: "https://files.catbox.moe/2cnene.mp3",
+        title: "Gunslinger - Avenged Sevenfold"
+      },
 
-    {
-      src: "https://files.catbox.moe/2cnene.mp3",
-      title: "Gunslinger - Avenged Sevenfold"
-    },
+      {
+        src: "https://files.catbox.moe/agaag9.mp3",
+        title: "Bohemian Rhapsody - Queen"
+      },
 
-    {
-      src: "https://files.catbox.moe/9yd94b.mp3",
-      title: "Bohemian Rhapsody - Queen"
-    },
+      {
+        src: "https://files.catbox.moe/vggfmr.mp3",
+        title: "Teenagers - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/vggfmr.mp3",
-      title: "Teenagers - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/6rm85p.mp3",
+        title: "Welcome To The Black Parade - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/6rm85p.mp3",
-      title: "Welcome To The Black Parade - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/78jfbe.mp3",
+        title: "Famous Last Words - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/78jfbe.mp3",
-      title: "Famous Last Words - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/qmmere.mp3",
+        title: "Mama - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/qmmere.mp3",
-      title: "Mama - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/emg8bw.mp3",
+        title: "This Is How I Disappear - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/emg8bw.mp3",
-      title: "This Is How I Disappear - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/fv35vb.mp3",
+        title: "Helena - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/fv35vb.mp3",
-      title: "Helena - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/kjgny8.mp3",
+        title: "The Ghost Of You - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/kjgny8.mp3",
-      title: "The Ghost Of You - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/c5qkmu.mp3",
+        title: "Cemetery Drive - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/c5qkmu.mp3",
-      title: "Cemetery Drive - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/0mlrj4.mp3",
+        title: "Give 'Em Hell, Kid - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/0mlrj4.mp3",
-      title: "Give 'Em Hell, Kid - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/8pvxn6.mp3",
+        title: "Thank You For The Venom - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/8pvxn6.mp3",
-      title: "Thank You For The Venom - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/vf5yf8.mp3",
+        title: "Summertime - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/vf5yf8.mp3",
-      title: "Summertime - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/wxe5dc.mp3",
+        title: "Na Na Na (Na Na Na Na Na Na Na Na Na) - My Chemical Romance"
+      },
 
-    {
-      src: "https://files.catbox.moe/wxe5dc.mp3",
-      title: "Na Na Na (Na Na Na Na Na Na Na Na Na) - My Chemical Romance"
-    },
+      {
+        src: "https://files.catbox.moe/6t8cck.mp3",
+        title: "Mockingbird - Eminem"
+      },
 
-    {
-      src: "https://files.catbox.moe/6t8cck.mp3",
-      title: "Mockingbird - Eminem"
-    },
+      {
+        src: "https://files.catbox.moe/9nwfks.mp3",
+        title: "Jesus Of Suburbia - Green Day"
+      }
+    ];
 
-    {
-      src: "https://files.catbox.moe/9nwfks.mp3",
-      title: "Jesus Of Suburbia - Green Day"
+    let currentTrack = 0;
+    const audio = document.getElementById("audioPlayer");
+    const title = document.getElementById("title");
+    const artist = document.getElementById("artist");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const seekbar = document.getElementById("seekbar");
+    const currentTimeDisplay = document.getElementById("current-time");
+
+    audio.addEventListener("ended", function () {
+      nextTrack();
+    });
+
+    // update seekbar tiap detik
+    audio.addEventListener("timeupdate", () => {
+      seekbar.value = audio.currentTime;
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
+    });
+
+    // atur durasi max slider pas audio ready
+    audio.addEventListener("loadedmetadata", () => {
+      seekbar.max = audio.duration;
+    });
+
+    // pas user geser (real-time preview)
+    seekbar.addEventListener("input", () => {
+      currentTimeDisplay.textContent = formatTime(seekbar.value);
+    });
+
+    // pas user lepas slider, set waktu audio ke situ
+    seekbar.addEventListener("change", () => {
+      audio.currentTime = seekbar.value;
+    });
+
+    // helper buat format detik ke menit:detik
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
     }
-  ];
 
-  let currentTrack = 0;
-  const audio = document.getElementById("audioPlayer");
-  const title = document.getElementById("title");
-  const artist = document.getElementById("artist");
-  const playPauseBtn = document.getElementById("playPauseBtn");
+    function loadTrack(index) {
+      audio.src = playlist[index].src;
+      const fullTitle = playlist[index].title;
+      title.textContent = fullTitle.split(" - ")[0];
+      artist.textContent = fullTitle.split(" - ")[1] || "";
+      audio.load();
+    }
 
-  audio.addEventListener("ended", function() {
-    nextTrack();
-  });
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = "⏸";
+      } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶";
+      }
+    }
 
-  function loadTrack(index) {
-    audio.src = playlist[index].src;
-    const fullTitle = playlist[index].title;
-    title.textContent = fullTitle.split(" - ")[0];
-    artist.textContent = fullTitle.split(" - ")[1] || "";
-    audio.load();
-  }
-
-  function togglePlay() {
-    if (audio.paused) {
+    function nextTrack() {
+      currentTrack = (currentTrack + 1) % playlist.length;
+      loadTrack(currentTrack);
       audio.play();
       playPauseBtn.textContent = "⏸";
-    } else {
-      audio.pause();
-      playPauseBtn.textContent = "▶";
     }
-  }
 
-  function nextTrack() {
-    currentTrack = (currentTrack + 1) % playlist.length;
+    function prevTrack() {
+      currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+      loadTrack(currentTrack);
+      audio.play();
+      playPauseBtn.textContent = "⏸";
+    }
+
+    function setVolume(value) {
+      audio.volume = value;
+    }
+
+    // init
     loadTrack(currentTrack);
-    audio.play();
-    playPauseBtn.textContent = "⏸";
-  }
-
-  function prevTrack() {
-    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-    loadTrack(currentTrack);
-    audio.play();
-    playPauseBtn.textContent = "⏸";
-  }
-
-  function setVolume(value) {
-    audio.volume = value;
-  }
-
-  // init
-  loadTrack(currentTrack);
-</script>
+  </script>
 
 </body>
+
 </html>
