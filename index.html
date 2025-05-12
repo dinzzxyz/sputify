@@ -76,6 +76,16 @@
       height: 150px;
       z-index: 999;
     }
+
+    .explicitBtn {
+      opacity: 0.4;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .explicitBtn.active {
+      opacity: 1;
+    }
   </style>
 </head>
 
@@ -88,6 +98,7 @@
     <div class="artist" id="artist">Artist</div>
 
     <div class="controls">
+      <button id="explicitBtn" class="explicitBtn">E</button>
       <button onclick="prevTrack()">⏮</button>
       <button onclick="togglePlay()" id="playPauseBtn">▶</button>
       <button onclick="nextTrack()">⏭</button>
@@ -123,7 +134,8 @@
 
       // A Little Piece of Heaven
       {
-        src: "https://files.catbox.moe/gbtc7p.mp3",
+        src: "https://files.catbox.moe/rfcxvd.mp3",
+        explicit: "https://files.catbox.moe/gbtc7p.mp3",
         title: "A Little Piece of Heaven - Avenged Sevenfold"
       },
 
@@ -163,6 +175,12 @@
       },
 
       {
+        src: "https://files.catbox.moe/rfuqj3.mp3",
+        explicit: "https://files.catbox.moe/76ypgk.mp3",
+        title: "I'm Not Okay (I Promise) - My Chemical Romance"
+      },
+
+      {
         src: "https://files.catbox.moe/fv35vb.mp3",
         title: "Helena - My Chemical Romance"
       },
@@ -193,7 +211,8 @@
       },
 
       {
-        src: "https://files.catbox.moe/wxe5dc.mp3",
+        src: "https://files.catbox.moe/jtmhz4.mp3",
+        explicit: "https://files.catbox.moe/wxe5dc.mp3",
         title: "Na Na Na (Na Na Na Na Na Na Na Na Na) - My Chemical Romance"
       },
 
@@ -209,12 +228,19 @@
     ];
 
     let currentTrack = 0;
+    let isExplicit = false;
     const audio = document.getElementById("audioPlayer");
     const title = document.getElementById("title");
     const artist = document.getElementById("artist");
     const playPauseBtn = document.getElementById("playPauseBtn");
     const seekbar = document.getElementById("seekbar");
     const currentTimeDisplay = document.getElementById("current-time");
+    const explicitBtn = document.getElementById("explicitBtn");
+    explicitBtn.addEventListener("click", () => {
+      isExplicit = !isExplicit;
+      explicitBtn.classList.toggle("active");
+      loadTrack();
+    })
 
     audio.addEventListener("ended", function () {
       nextTrack();
@@ -249,9 +275,11 @@
     }
 
     function loadTrack(index) {
-      audio.src = playlist[index].src;
+      const song = playlist[index];
+      const url = isExplicit && song.explicit ? song.explicit : song.src; audio.src = url;
       const fullTitle = playlist[index].title;
-      title.textContent = fullTitle.split(" - ")[0];
+      const titleOnly = fullTitle.split(" - ")[0];
+      title.textContent = (isExplicit && song.explicit ? "🔞 " : "") + titleOnly;
       artist.textContent = fullTitle.split(" - ")[1] || "";
       audio.load();
     }
